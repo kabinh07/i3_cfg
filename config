@@ -36,14 +36,11 @@ exec --no-startup-id xinput set-prop "ELAN0709:00 \
 exec --no-startup-id xinput set-prop "ELAN0709:00 04F3:30A0 Touchpad" \
 "libinput Natural Scrolling Enabled" 1
 
-# Transparent
-exec --no-startup-id picom --config /home/kabin/.config/picom/config -b
-
-# Background image
-set $bg_image /home/kabin/Downloads/wallpaperflare.com_wallpaper.jpg
-
 # Setup wallpaper
-exec --no-startup-id feh --bg-scale $bg_image
+exec --no-startup-id feh --bg-scale /home/kabin/Downloads/'wallpaperflare.com_wallpaper(1).jpg'
+
+# Transparent
+exec --no-startup-id picom
 
 # ibus setup
 bindsym $mod+Tab exec --no-startup-id ~/.config/i3/lang_switch.sh
@@ -74,7 +71,8 @@ floating_modifier $mod
 tiling_drag modifier titlebar
 
 # start a terminal
-bindsym $mod+Return exec i3-sensible-terminal
+bindsym $mod+Return exec warp-terminal
+bindsym $mod+Shift+Return exec i3-sensible-terminal
 
 # kill focused window
 bindsym $mod+Shift+q kill
