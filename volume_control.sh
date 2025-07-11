@@ -10,6 +10,12 @@ if [ "$1" = "down" ]; then
     pactl set-sink-volume @DEFAULT_SINK@ -5%
 fi
 
+# Handle mute (called after mute toggle)
+if [ "$1" = "mute" ]; then
+    # Just show notification, mute was already toggled
+    true
+fi
+
 # Get Current Volume
 VOLUME=$(pactl get-sink-volume @DEFAULT_SINK@ | awk '{print $5}' | tr -d '%')
 
@@ -19,5 +25,12 @@ if [ "$VOLUME" -gt 100 ]; then
     VOLUME=100
 fi
 
-# Show Notification
-dunstify -r 9993 -t 10000 "  Volume Manager" "Volume: $VOLUME%" -h int:value:"$VOLUME"
+# Check if muted
+MUTED=$(pactl get-sink-mute @DEFAULT_SINK@ | awk '{print $2}')
+
+# Show Notification with progress bar
+if [ "$MUTED" = "yes" ]; then
+    dunstify -a "Volume Manager" -u normal -i audio-volume-muted -h string:x-dunst-stack-tag:volume "Volume: Muted" -h int:value:0 -t 2000
+else
+    dunstify -a "Volume Manager" -u normal -i audio-volume-high -h string:x-dunst-stack-tag:volume "Volume: $VOLUME%" -h int:value:$VOLUME -t 2000
+fi
