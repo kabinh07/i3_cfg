@@ -1,0 +1,28 @@
+# Remove this line (not valid in i3blocks)
+# colors = true
+
+# Set colors per block instead
+[wireless]
+instance=_first_
+format="  {essid} | {ip}"
+format_down=" : Down"
+interval=5
+color=#81a1c1  # Set color per block
+
+[ethernet]
+instance=_first_
+format=" {ip} ({bitrate})"
+format_down=": Down"
+interval=5
+color=#81a1c1
+
+[battery]
+instance=0
+format=" {status} {percentage}% "
+format_down=" No battery "
+status_chr="󱊦 CHR"
+status_bat="󱊢 BAT"
+status_unk="? UNK"
+status_full="󱊣 FULL"
+interval=30
+color=#fafe7c

@@ -1,0 +1,10 @@
+# Enable transparency
+backend = "glx";
+vsync = true;
+inactive-opacity = 0.9;
+active-opacity = 1.0;
+frame-opacity = 0.5;
+shadow = true;
+shadow-radius = 10;
+shadow-offset-x = -10;
+shadow-offset-y = -10;

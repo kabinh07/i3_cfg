@@ -37,14 +37,14 @@ exec --no-startup-id xinput set-prop "ELAN0709:00 04F3:30A0 Touchpad" \
 "libinput Natural Scrolling Enabled" 1
 
 # Setup wallpaper
-exec --no-startup-id feh --bg-scale '/home/kabin/wallpapers/sunset-lake-boat-night-sky-scenery-digital-art-4k-wallpaper-uhdpaper.com-395@3@b.jpg'
-#exec --no-startup-id ~/.rand_wallpaper.sh
+exec --no-startup-id feh --bg-scale ~/.config/i3/wallpapers/sunset-lake-boat-night-sky-scenery-digital-art-4k-wallpaper-uhdpaper.com-395@3@b.jpg
+#exec --no-startup-id ~/.config/i3/scripts/rand_wallpaper.sh
 
 # Transparent
-exec --no-startup-id picom --config /home/kabin/.config/picom/config
+exec --no-startup-id picom --config ~/.config/i3/configs/picom/config
 
 # ibus setup
-bindsym $mod+Tab exec --no-startup-id ~/.config/i3/lang_switch.sh
+bindsym $mod+Tab exec --no-startup-id ~/.config/i3/scripts/lang_switch.sh
 
 # The combination of xss-lock, nm-applet and pactl is a popular choice, so
 # they are included here as an example. Modify as you see fit.
@@ -57,17 +57,20 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 # and nm-applet is a desktop environment-independent system tray GUI for it.
 exec --no-startup-id nm-applet
 
+# Bluetooth manager applet
+exec --no-startup-id blueman-applet
+
 # Volume using pactl
-bindsym XF86AudioRaiseVolume exec --no-startup-id ~/.config/i3/volume_control.sh up
+bindsym XF86AudioRaiseVolume exec --no-startup-id ~/.config/i3/scripts/volume_control.sh up
 
-bindsym XF86AudioLowerVolume exec --no-startup-id ~/.config/i3/volume_control.sh down
+bindsym XF86AudioLowerVolume exec --no-startup-id ~/.config/i3/scripts/volume_control.sh down
 
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && ~/.config/i3/volume_control.sh mute
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && ~/.config/i3/scripts/volume_control.sh mute
 
 ## Brightness controls
-bindsym XF86MonBrightnessUp exec --no-startup-id ~/.config/i3/brightness_wrapper.sh up
+bindsym XF86MonBrightnessUp exec --no-startup-id ~/.config/i3/scripts/brightness_wrapper.sh up
 
-bindsym XF86MonBrightnessDown exec --no-startup-id ~/.config/i3/brightness_wrapper.sh down
+bindsym XF86MonBrightnessDown exec --no-startup-id ~/.config/i3/scripts/brightness_wrapper.sh down
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -94,7 +97,7 @@ bindsym $mod+d exec --no-startup-id dmenu_run -fn 'Poppins:size=9'
 
 # Take screenshot
 #bindsym Ctrl+Shift+s exec --no-startup-id cd /home/kabin/Pictures/Screenshots/ && scrot -s
-bindsym Ctrl+Shift+s exec --no-startup-id /home/kabin/screenshot.sh
+bindsym Ctrl+Shift+s exec --no-startup-id ~/.config/i3/scripts/screenshot.sh
 
 # change focus
 #bindsym $mod+j focus left
@@ -191,24 +194,30 @@ bindsym $mod+Shift+r restart
 # lock screen
 bindsym $mod+l exec --no-startup-id xfce4-screensaver-command -l
 
-# shutdown / restart / suspend...
-set $mode_system Press (e) logout, (s) suspend, (h) hibernate, (r) reboot, (CTRL+s) shutdown
+# Visual Power Menu - Beautiful rofi-based shutdown/restart menu
+bindsym $mod+BackSpace exec --no-startup-id ~/.config/i3/scripts/power_menu.sh
 
-mode "$mode_system" {
-    bindsym e exec --no-startup-id i3-msg exit, mode "default"
-    bindsym s exec --no-startup-id systemctl suspend, mode "default"
-    bindsym h exec --no-startup-id && systemctl hibernate, mode "default"
-    bindsym r exec --no-startup-id systemctl reboot, mode "default"
-    bindsym Ctrl+s exec --no-startup-id systemctl poweroff -i, mode "default"
+# Alternative: Zenity-based power menu (uncomment if you prefer buttons)
+# bindsym $mod+BackSpace exec --no-startup-id ~/.config/i3/scripts/power_menu_zenity.sh
 
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
-}
-
-bindsym $mod+BackSpace mode "$mode_system"
+# Legacy text-based system mode (commented out - uncomment if you want the old way)
+# set $mode_system Press (e) logout, (s) suspend, (h) hibernate, (r) reboot, (CTRL+s) shutdown
+# mode "$mode_system" {
+#     bindsym e exec --no-startup-id i3-msg exit, mode "default"
+#     bindsym s exec --no-startup-id systemctl suspend, mode "default"
+#     bindsym h exec --no-startup-id && systemctl hibernate, mode "default"
+#     bindsym r exec --no-startup-id systemctl reboot, mode "default"
+#     bindsym Ctrl+s exec --no-startup-id systemctl poweroff -i, mode "default"
+#     bindsym Return mode "default"
+#     bindsym Escape mode "default"
+# }
+# bindsym $mod+BackSpace mode "$mode_system"
 
 # Open File Manager
 bindsym $mod+e exec nemo
+
+# Open Bluetooth Manager
+bindsym $mod+b exec blueman-manager
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
