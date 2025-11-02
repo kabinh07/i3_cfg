@@ -1,123 +1,209 @@
 #!/bin/bash
 
-# Power Menu using rofi with icons
-# Icons and colors configuration
+# Modern Power Menu with styled confirmations
 
 theme_file="/tmp/power_menu.rasi"
+confirm_theme="/tmp/power_confirm.rasi"
 
-# Create temporary rofi theme with custom styling
+# Main power menu theme - Dark modern design
 cat > "$theme_file" << 'EOF'
 * {
-    bg-col: #1e1e2e;
-    bg-col-light: #313244;
-    border-col: #89b4fa;
-    selected-col: #313244;
-    blue: #89b4fa;
-    fg-col: #cdd6f4;
-    fg-col2: #f38ba8;
-    grey: #6c7086;
+    bg: #1a1b26;
+    bg-alt: #24283b;
+    fg: #c0caf5;
+    fg-alt: #565f89;
+    accent: #7aa2f7;
+    accent-alt: #bb9af7;
+    urgent: #f7768e;
+    success: #9ece6a;
     
-    width: 400px;
-    font: "Poppins Bold 14";
-}
-
-element-text, element-icon, mode-switcher {
-    background-color: inherit;
-    text-color: inherit;
+    background-color: transparent;
+    text-color: @fg;
+    font: "Poppins 12";
 }
 
 window {
-    height: 300px;
-    border: 3px;
-    border-color: @border-col;
-    border-radius: 8px;
-    background-color: @bg-col;
+    width: 500px;
+    background-color: @bg;
+    border: 2px;
+    border-color: @accent;
+    border-radius: 12px;
+    padding: 20px;
 }
 
 mainbox {
-    background-color: @bg-col;
+    background-color: transparent;
+    spacing: 20px;
+    children: [inputbar, listview];
 }
 
 inputbar {
+    background-color: @bg-alt;
+    border-radius: 8px;
+    padding: 12px 16px;
     children: [prompt];
-    background-color: @bg-col-light;
-    border-radius: 5px;
-    padding: 2px;
 }
 
 prompt {
-    background-color: @blue;
-    padding: 6px;
-    text-color: @bg-col;
-    border-radius: 3px;
-    margin: 20px 0px 0px 20px;
+    background-color: transparent;
+    text-color: @accent;
+    font: "Poppins Bold 13";
 }
 
 listview {
-    border: 0px 0px 0px;
-    padding: 6px 0px 0px;
-    margin: 10px 0px 0px 20px;
+    background-color: transparent;
     columns: 1;
     lines: 5;
-    background-color: @bg-col;
+    spacing: 8px;
+    cycle: true;
+    fixed-height: true;
 }
 
 element {
-    padding: 8px;
-    background-color: @bg-col;
-    text-color: @fg-col;
-    margin: 0px 5px 0px 0px;
-    border-radius: 5px;
-}
-
-element-icon {
-    size: 32px;
+    background-color: @bg-alt;
+    text-color: @fg;
+    border-radius: 8px;
+    padding: 14px 20px;
+    orientation: horizontal;
+    children: [element-text];
 }
 
 element selected {
-    background-color: @selected-col;
-    text-color: @fg-col2;
+    background-color: @accent;
+    text-color: @bg;
+}
+
+element-text {
+    background-color: transparent;
+    text-color: inherit;
+    font: "Poppins Medium 12";
+    vertical-align: 0.5;
 }
 EOF
 
-# Define menu options
+# Confirmation dialog theme - Cleaner and more prominent
+cat > "$confirm_theme" << 'EOF'
+* {
+    bg: #1a1b26;
+    bg-alt: #24283b;
+    fg: #c0caf5;
+    accent: #7aa2f7;
+    urgent: #f7768e;
+    
+    background-color: transparent;
+    text-color: @fg;
+    font: "Poppins 11";
+}
+
+window {
+    width: 400px;
+    background-color: @bg;
+    border: 2px;
+    border-color: @urgent;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+mainbox {
+    background-color: transparent;
+    spacing: 15px;
+    children: [message, listview];
+}
+
+message {
+    background-color: @bg-alt;
+    border-radius: 8px;
+    padding: 15px;
+    border: 2px;
+    border-color: @urgent;
+}
+
+textbox {
+    background-color: transparent;
+    text-color: @fg;
+    font: "Poppins Bold 12";
+    vertical-align: 0.5;
+    horizontal-align: 0.5;
+}
+
+listview {
+    background-color: transparent;
+    columns: 2;
+    lines: 1;
+    spacing: 10px;
+    cycle: false;
+}
+
+element {
+    background-color: @bg-alt;
+    text-color: @fg;
+    border-radius: 6px;
+    padding: 12px 24px;
+}
+
+element selected.normal {
+    background-color: @urgent;
+    text-color: @bg;
+    font: "Poppins Bold 11";
+}
+
+element-text {
+    background-color: transparent;
+    text-color: inherit;
+    horizontal-align: 0.5;
+    vertical-align: 0.5;
+}
+EOF
+
+# Define menu options with better icons
 declare -a options=(
-    "󰍃 Logout"
-    "󰜉 Reboot" 
-    "󰐥 Shutdown"
-    "󰒲 Suspend"
-    "󰒳 Hibernate"
+    "󰍃  Logout"
+    "  Reboot" 
+    "  Shutdown"
+    "󰤄  Suspend"
+    "󰋊  Hibernate"
 )
 
-# Show rofi menu and capture selection
+# Show main power menu
 choice=$(printf '%s\n' "${options[@]}" | rofi -dmenu \
     -i \
     -theme "$theme_file" \
-    -p "Power Options" \
+    -p " Power Menu" \
+    -no-custom \
     -selected-row 0)
 
-# Remove temporary theme file
-rm -f "$theme_file"
+# Function for confirmation dialog
+confirm_action() {
+    local message="$1"
+    rofi -dmenu \
+        -theme "$confirm_theme" \
+        -mesg "$message" \
+        -p "" \
+        -no-custom \
+        <<< $'  Yes\n  No'
+}
 
 # Handle user selection
 case $choice in
-    "󰍃 Logout")
-        i3-msg exit
+    "󰍃  Logout")
+        result=$(confirm_action "⚠ End your session and logout?")
+        [[ "$result" == "  Yes" ]] && i3-msg exit
         ;;
-    "󰜉 Reboot")
-        # Show confirmation
-        confirm=$(echo -e "Yes\nNo" | rofi -dmenu -p "Reboot now?" -theme-str "window {width: 200px;}")
-        [[ "$confirm" == "Yes" ]] && systemctl reboot
+    "  Reboot")
+        result=$(confirm_action "⚠ Reboot your system now?")
+        [[ "$result" == "  Yes" ]] && systemctl reboot
         ;;
-    "󰐥 Shutdown")
-        # Show confirmation  
-        confirm=$(echo -e "Yes\nNo" | rofi -dmenu -p "Shutdown now?" -theme-str "window {width: 200px;}")
-        [[ "$confirm" == "Yes" ]] && systemctl poweroff
+    "  Shutdown")
+        result=$(confirm_action "⚠ Shutdown your system now?")
+        [[ "$result" == "  Yes" ]] && systemctl poweroff
         ;;
-    "󰒲 Suspend")
+    "󰤄  Suspend")
         systemctl suspend
         ;;
-    "󰒳 Hibernate")
+    "󰋊  Hibernate")
         systemctl hibernate
         ;;
 esac
+
+# Cleanup
+rm -f "$theme_file" "$confirm_theme"
