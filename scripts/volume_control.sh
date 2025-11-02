@@ -28,9 +28,9 @@ fi
 # Check if muted
 MUTED=$(pactl get-sink-mute @DEFAULT_SINK@ | awk '{print $2}')
 
-# Show Notification with progress bar
+# Show notification with progress bar
 if [ "$MUTED" = "yes" ]; then
-    dunstify -a "Volume Manager" -u normal -i audio-volume-muted -h string:x-dunst-stack-tag:volume "Volume: Muted" -h int:value:0 -t 2000
+    dunstify -a "Volume Manager" -u normal -h string:x-dunst-stack-tag:volume "Volume: Muted" -h int:value:0 -t 2000
 else
-    dunstify -a "Volume Manager" -u normal -i audio-volume-high -h string:x-dunst-stack-tag:volume "Volume: $VOLUME%" -h int:value:$VOLUME -t 2000
+    dunstify -a "Volume Manager" -u normal -h string:x-dunst-stack-tag:volume "Volume: $VOLUME%" -h int:value:$VOLUME -t 2000
 fi

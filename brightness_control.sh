@@ -22,5 +22,5 @@ esac
 # Get current brightness percentage
 BRIGHTNESS=$(brightnessctl -m | cut -d',' -f4 | tr -d '%')
 
-# Show notification with progress bar (matching volume style)
-dunstify -a "Brightness Manager" -u normal -i display-brightness -h string:x-dunst-stack-tag:brightness "Brightness: $BRIGHTNESS%" -h int:value:$BRIGHTNESS -t 2000
+# Show notification with progress bar
+dunstify -a "Brightness Manager" -u normal -h string:x-dunst-stack-tag:brightness "Brightness: $BRIGHTNESS%" -h int:value:$BRIGHTNESS -t 2000
