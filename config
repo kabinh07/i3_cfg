@@ -36,6 +36,9 @@ exec --no-startup-id xinput set-prop "ELAN0709:00 \
 exec --no-startup-id xinput set-prop "ELAN0709:00 04F3:30A0 Touchpad" \
 "libinput Natural Scrolling Enabled" 1
 
+# Autotiling - automatically alternate split direction (master-stack feel)
+exec_always --no-startup-id autotiling
+
 # Setup wallpaper
 exec --no-startup-id feh --bg-scale ~/.config/i3/wallpapers/sunset-lake-boat-night-sky-scenery-digital-art-4k-wallpaper-uhdpaper.com-395@3@b.jpg
 #exec --no-startup-id ~/.config/i3/scripts/rand_wallpaper.sh
@@ -151,16 +154,16 @@ bindsym $mod+a focus parent
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
-set $ws1 "I"
-set $ws2 "II"
-set $ws3 "III"
-set $ws4 "IV"
-set $ws5 "V"
-set $ws6 "VI"
-set $ws7 "VII"
-set $ws8 "VIII"
-set $ws9 "IX"
-set $ws10 "X"
+set $ws1 " 1 "
+set $ws2 " 2 "
+set $ws3 " 3 "
+set $ws4 " 4 "
+set $ws5 " 5 "
+set $ws6 " 6 "
+set $ws7 " 7 "
+set $ws8 " 8 "
+set $ws9 " 9 "
+set $ws10 " 10 "
 
 # switch to workspace
 bindsym $mod+1 workspace $ws1
@@ -192,7 +195,7 @@ bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 
 # lock screen
-bindsym $mod+l exec --no-startup-id xfce4-screensaver-command -l
+bindsym $mod+l exec --no-startup-id i3lock -c 000000
 
 # Visual Power Menu - Beautiful rofi-based shutdown/restart menu
 bindsym $mod+BackSpace exec --no-startup-id ~/.config/i3/scripts/power_menu.sh
@@ -246,37 +249,47 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-# i3 Bar Theme
+# i3 Bar Theme - Nord-inspired
 bar {
     font pango:Poppins Regular 9
+    height 28
     colors {
-        background #00000090
-        statusline #c5c8c6
-        separator #444444
+        background #2e344080
+        statusline #eceff4
+        separator #4c566a
 
-        # Focused window
-        focused_workspace #282a2e #5e81ac #ffffff
+        # Focused workspace
+        focused_workspace #88c0d0 #5e81ac #eceff4
 
-        # Inactive windows
-	inactive_workspace #1e1e1e80 #44444480 #b5bd6880
+        # Active workspace (visible but not focused)
+        active_workspace #4c566a #434c5e #d8dee9
+
+        # Inactive workspaces
+        inactive_workspace #2e344080 #3b4252a0 #d8dee9
+
+        # Urgent workspace
+        urgent_workspace #bf616a #bf616a #eceff4
     }
     position top
     status_command i3status
     i3bar_command i3bar --transparency
+    tray_padding 4
 }
 
+# Nord color scheme for window borders
 # colour of border, background, text, indicator, and child_border
-client.focused #305cde #2d68c450 #ffffff #696ebf #2587cc
-client.focused_inactive #263640 #387d8950 #ffffff #263640 #263640
-client.unfocused #263640 #222222 #93a1a1 #263640 #263640
-client.urgent #263640 #b08500 #93a1a1 #263640 #263640
-client.placeholder #263640 #7a979c #93a1a1 #263640 #263640
-client.background #263640
+client.focused          #88c0d0 #5e81ac #eceff4 #8fbcbb #88c0d0
+client.focused_inactive #4c566a #434c5e #d8dee9 #4c566a #4c566a
+client.unfocused        #3b4252 #2e3440 #d8dee9 #3b4252 #3b4252
+client.urgent           #bf616a #bf616a #eceff4 #bf616a #bf616a
+client.placeholder      #2e3440 #2e3440 #d8dee9 #2e3440 #2e3440
+client.background       #2e3440
 
 # window rules, you can find the window class using xprop
 for_window [class=Eog|Sxiv|feh|mpv|Vlc|File-roller|Xarchiver] floating enable
 for_window [class=Eog|Sxiv|feh|mpv|Vlc|File-roller|Xarchiver] focus
-for_window [class=".*"] border pixel 2
+for_window [class=".*"] border pixel 3
 hide_edge_borders smart
-gaps inner 1
+gaps inner 8
+gaps outer 4
 smart_gaps on
